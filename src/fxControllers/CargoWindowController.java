@@ -4,10 +4,14 @@ import entities.Cargo;
 import entities.CargoType;
 import hibernate.HibernateCRUD;
 import javafx.event.ActionEvent;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-public class CargoWindowController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class CargoWindowController implements Initializable {
     public CheckBox checkboxContainsBatteries;
     public CheckBox checkboxRefrigeratedBelovZero;
     public CheckBox checkboxRefrigeratedAboveZero;
@@ -20,7 +24,7 @@ public class CargoWindowController {
     public TextField fieldValueOfCargo;
     public TextField textfieldTotalWeightOfCargo;
     public TextField textfieldPickupAddress;
-    public PasswordField textfieldDestinationAddress;
+    public TextField textfieldDestinationAddress;
     public Button buttonCreate;
     public Button buttonUpdate;
     public RadioButton radioButtonLoose;
@@ -30,6 +34,23 @@ public class CargoWindowController {
 
     public void setCargo(Cargo cargo) {
         this.cargo = cargo;
+        if(cargo.getCargoType()==CargoType.Loose){
+            radioButtonLoose.setSelected(true);
+        }else if(cargo.getCargoType()==CargoType.Liquid){
+            radioButtonLiquid.setSelected(true);
+        } else if (cargo.getCargoType() == CargoType.OnEuroPallets) {
+            radioButtonEuroPallet.setSelected(true);
+        }
+        datepickerMustBeDeliveredOn.setValue(cargo.getMustBeDeliveredUntilDate());
+        datepickerReadyForPickup.setValue(cargo.getReadyForPickUpDate());
+        fieldValueOfCargo.setText(String.valueOf(cargo.getValueOfCargoEUR()));
+        textfieldTotalWeightOfCargo.setText(String.valueOf(cargo.getTotalCargoWeightTonnes()));
+        textfieldPickupAddress.setText(cargo.getPickupAddress());
+        textfieldDestinationAddress.setText(cargo.getDeliveryAddress());
+        if(cargo!=null){
+            buttonUpdate.setDisable(false);
+            buttonCreate.setDisable(true);
+        }
     }
 
     private Cargo cargo;
@@ -66,5 +87,12 @@ public class CargoWindowController {
         }
         cargo.setPickupAddress(textfieldPickupAddress.getText());
         cargo.setDeliveryAddress(textfieldDestinationAddress.getText());
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        if(cargo==null){
+            buttonUpdate.setDisable(true);
+        }
     }
 }

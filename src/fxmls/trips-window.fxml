@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="513.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxControllers.TripsWindowController">
+<AnchorPane prefHeight="545.0" prefWidth="670.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxControllers.TripsWindowController">
    <children>
       <Label layoutX="37.0" layoutY="26.0" text="Cargo" />
       <ChoiceBox fx:id="choiceBoxCargo" layoutX="37.0" layoutY="43.0" prefHeight="25.0" prefWidth="200.0" />
@@ -11,30 +19,32 @@
       <ChoiceBox fx:id="choiceBoxDriver" layoutX="37.0" layoutY="92.0" prefHeight="25.0" prefWidth="200.0" />
       <Label layoutX="37.0" layoutY="117.0" text="Manager" />
       <ComboBox fx:id="comboBoxManager" layoutX="37.0" layoutY="134.0" prefHeight="25.0" prefWidth="200.0" />
-      <Label layoutX="38.0" layoutY="157.0" text="Distance" />
-      <TextField fx:id="fieldDistance" layoutX="38.0" layoutY="174.0" prefHeight="25.0" prefWidth="200.0" />
-      <Label layoutX="38.0" layoutY="199.0" text="Total Fuel Consumed" />
-      <TextField fx:id="fieldFuelConsumed" layoutX="38.0" layoutY="216.0" prefHeight="25.0" prefWidth="200.0" />
-      <Label layoutX="38.0" layoutY="241.0" text="Average Speed" />
-      <TextField fx:id="fieldAverageSpeed" layoutX="38.0" layoutY="258.0" prefHeight="25.0" prefWidth="200.0" />
-      <Label layoutX="39.0" layoutY="290.0" text="Selected Truck" />
-      <Button fx:id="buttonCreate" layoutX="37.0" layoutY="460.0" mnemonicParsing="false" onAction="#createNewTrip" text="Create New" />
-      <Button fx:id="buttonUpdate" layoutX="127.0" layoutY="460.0" mnemonicParsing="false" onAction="#updateTrip" text="Update" />
+      <Label layoutX="38.0" layoutY="216.0" text="Distance" />
+      <TextField fx:id="fieldDistance" layoutX="38.0" layoutY="233.0" prefHeight="25.0" prefWidth="200.0" />
+      <Label layoutX="38.0" layoutY="258.0" text="Total Fuel Consumed" />
+      <TextField fx:id="fieldFuelConsumed" layoutX="38.0" layoutY="275.0" prefHeight="25.0" prefWidth="200.0" />
+      <Label layoutX="38.0" layoutY="300.0" text="Average Speed" />
+      <TextField fx:id="fieldAverageSpeed" layoutX="38.0" layoutY="317.0" prefHeight="25.0" prefWidth="200.0" />
+      <Label layoutX="39.0" layoutY="349.0" text="Selected Truck" />
+      <Button fx:id="buttonCreate" layoutX="37.0" layoutY="506.0" mnemonicParsing="false" onAction="#createNewTrip" text="Create New" />
+      <Button fx:id="buttonUpdate" layoutX="127.0" layoutY="506.0" mnemonicParsing="false" onAction="#updateTrip" text="Update" />
       <ListView fx:id="trucksList" layoutX="279.0" layoutY="43.0" prefHeight="328.0" prefWidth="179.0" />
       <Label layoutX="279.0" layoutY="25.0" text="Trucks list" />
       <Button fx:id="buttonAssignTruck" layoutX="279.0" layoutY="380.0" mnemonicParsing="false" onAction="#assignSelectedTruck" text="Assign selected Truck" />
-      <TextArea fx:id="textAreaSelectedTruck" editable="false" layoutX="38.0" layoutY="306.0" prefHeight="83.0" prefWidth="200.0" />
+      <TextArea fx:id="textAreaSelectedTruck" editable="false" layoutX="38.0" layoutY="365.0" prefHeight="83.0" prefWidth="200.0" />
       <Label layoutX="468.0" layoutY="25.0" text="Stop/Rest-points of this trip" />
       <ListView fx:id="listViewStopPoints" layoutX="468.0" layoutY="43.0" prefHeight="328.0" prefWidth="179.0" />
       <Button layoutX="468.0" layoutY="380.0" mnemonicParsing="false" onAction="#editSelectedStopPoint" text="Edit Selected Stop-Point" />
       <Button layoutX="468.0" layoutY="411.0" mnemonicParsing="false" onAction="#addNewStopPoint" text="Add new Stop-Point" />
-      <RadioButton fx:id="radioButtonInProcessNo" layoutX="42.0" layoutY="415.0" mnemonicParsing="false" selected="true" text="No">
+      <RadioButton fx:id="radioButtonInProcessNo" layoutX="42.0" layoutY="474.0" mnemonicParsing="false" selected="true" text="No">
          <toggleGroup>
             <ToggleGroup fx:id="TripRadio" />
          </toggleGroup>
       </RadioButton>
-      <RadioButton fx:id="radioButtonInProcessYes" layoutX="96.0" layoutY="415.0" mnemonicParsing="false" text="Yes" toggleGroup="$TripRadio" />
-      <Label layoutX="39.0" layoutY="397.0" text="In Process:" />
-      <RadioButton fx:id="radioButtonComplete" layoutX="150.0" layoutY="415.0" mnemonicParsing="false" text="Complete" toggleGroup="$TripRadio" />
+      <RadioButton fx:id="radioButtonInProcessYes" layoutX="96.0" layoutY="474.0" mnemonicParsing="false" text="Yes" toggleGroup="$TripRadio" />
+      <Label layoutX="39.0" layoutY="456.0" text="In Process:" />
+      <RadioButton fx:id="radioButtonComplete" layoutX="150.0" layoutY="474.0" mnemonicParsing="false" text="Complete" toggleGroup="$TripRadio" />
+      <Label layoutX="38.0" layoutY="165.0" text="Additional Manager" />
+      <ComboBox fx:id="comboBox2ndManager" layoutX="38.0" layoutY="182.0" prefHeight="25.0" prefWidth="200.0" />
    </children>
 </AnchorPane>

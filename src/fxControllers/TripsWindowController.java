@@ -28,12 +28,8 @@ public class TripsWindowController implements Initializable {
     public ChoiceBox choiceBoxCargo;
     public Button buttonCreate;
     public Button buttonUpdate;
-
-    public void setTrip(Trip trip) {
-        this.trip = trip;
-        fillDataFields();
-    }
-
+    public ComboBox <Manager> comboBox2ndManager;
+    private User user;
     private Trip trip;
     private Truck assignedTruck;
     public TextField fieldStartPoint;
@@ -43,6 +39,35 @@ public class TripsWindowController implements Initializable {
     public TextField fieldDistance;
     public TextField fieldFuelConsumed;
     public TextField fieldAverageSpeed;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        fillTrucksList();
+        fillCargoBox();
+        buttonUpdate.setDisable(true);
+    }
+    public void setTrip(Trip trip) {
+        this.trip = trip;
+        fillDataFields();
+    }
+    public void setUser(User user) {
+        this.user = user;
+        if(user.getClass().equals(Driver.class)){
+            comboBoxManager.setDisable(true);
+            comboBox2ndManager.setDisable(true);
+            choiceBoxCargo.setDisable(true);
+            if(trip.isComplete()|| trip.isInProcess()){
+                choiceBoxDriver.setDisable(true);
+            }
+
+        } else if (user.getClass().equals(Manager.class)) {
+            comboBoxManager.setValue((Manager) user);
+            comboBoxManager.setDisable(true);
+        }
+
+        fillDriversBox();
+        fillManagersBox();
+    }
 
     public void createNewTrip(ActionEvent actionEvent) {
         trip = new Trip();
@@ -54,6 +79,7 @@ public class TripsWindowController implements Initializable {
         choiceBoxCargo.setValue(trip.getCargo());
         choiceBoxDriver.setValue(trip.getAssignedDriver());
         comboBoxManager.setValue(trip.getAssignedManager());
+        comboBox2ndManager.setValue(trip.getAssigned2ndManager());
         fieldDistance.setText(String.valueOf(trip.getDistance()));
         fieldFuelConsumed.setText(String.valueOf(trip.getFuelConsumed()));
         fieldAverageSpeed.setText(String.valueOf(trip.getAverageSpeed()));
@@ -73,6 +99,7 @@ public class TripsWindowController implements Initializable {
         trip.setCargo((Cargo) choiceBoxCargo.getValue());
         trip.setAssignedDriver(choiceBoxDriver.getValue());
         trip.setAssignedManager(comboBoxManager.getValue());
+        trip.setAssigned2ndManager(comboBox2ndManager.getValue());
         if(!fieldDistance.getText().isEmpty()){
             trip.setDistance(Float.parseFloat(fieldDistance.getText()));
         }
@@ -97,7 +124,11 @@ public class TripsWindowController implements Initializable {
     private void fillDriversBox (){
         Driver driver = new Driver();
         List<Driver> drivers = new ArrayList<>();
-        drivers = HibernateCRUD.getAllEntity(driver);
+        if(user.getClass().equals(Driver.class)){
+            drivers.add((Driver) user);
+        } else if (user.getClass().equals(Manager.class)) {
+            drivers = HibernateCRUD.getAllEntity(driver);
+        }
         drivers.add(null);
         drivers.forEach(c->choiceBoxDriver.getItems().add(c));
     }
@@ -106,6 +137,8 @@ public class TripsWindowController implements Initializable {
         List<Manager> managers = new ArrayList<>();
         managers = HibernateCRUD.getAllEntity(manager);
         managers.forEach(c->comboBoxManager.getItems().add(c));
+        managers.forEach(c->comboBox2ndManager.getItems().add(c));
+        comboBox2ndManager.getItems().add(null);
     }
     private void fillCargoBox (){
         Cargo cargo = new Cargo();
@@ -118,15 +151,6 @@ public class TripsWindowController implements Initializable {
         Truck truck = new Truck();
         List<Truck> trucks = HibernateCRUD.getAllEntity(truck);
         trucks.forEach(c->trucksList.getItems().add(c));
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        fillDriversBox();
-        fillManagersBox();
-        fillTrucksList();
-        fillCargoBox();
-        buttonUpdate.setDisable(true);
     }
 
     public void assignSelectedTruck(ActionEvent actionEvent) {
@@ -161,6 +185,9 @@ public class TripsWindowController implements Initializable {
         trip.getAllRestPoints().forEach(c->listViewStopPoints.getItems().add(c));
     }
     public void setUpdateMode(){
+        if(user.getClass().equals(Manager.class)){
+            comboBoxManager.setDisable(false);
+        }
         buttonCreate.setDisable(true);
         buttonUpdate.setDisable(false);
     }

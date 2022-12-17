@@ -19,6 +19,9 @@ public class Trip {
     @ManyToOne
     @Cascade(value = org.hibernate.annotations.CascadeType.MERGE)
     private Manager assignedManager;
+    @ManyToOne
+    @Cascade(value = org.hibernate.annotations.CascadeType.MERGE)
+    private Manager assigned2ndManager;
     private float distance;
     private float fuelConsumed;
     private float averageSpeed;
