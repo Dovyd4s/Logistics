@@ -20,4 +20,6 @@ public class StopPoint implements Serializable {
     private String coordinates;
     private LocalDateTime timeOfArrival;
     private LocalDateTime timeOfDeparture;
+    private int odometer;
+    private double volumeOfDiesel;
 }

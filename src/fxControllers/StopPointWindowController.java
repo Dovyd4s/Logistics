@@ -33,6 +33,8 @@ public class StopPointWindowController implements Initializable {
     public TextField textFieldTimeofDeparture;
     public Button buttonCreate;
     public Button buttonUpdate;
+    public TextField textFieldOdometer;
+    public TextField textLabelDieselRefueled;
     private StopPoint stopPoint;
     private TripsWindowController tripsWindowController;
     private Trip trip;
@@ -68,6 +70,10 @@ public class StopPointWindowController implements Initializable {
         stopPoint.setCoordinates(textFieldCoordinates.getText());
         stopPoint.setTimeOfArrival(LocalDateTime.of(datePickerArrival.getValue(), LocalTime.parse(textFieldTimeOfArrival.getText())));
         stopPoint.setTimeOfDeparture(LocalDateTime.of(datePickerDeparture.getValue(), LocalTime.parse(textFieldTimeofDeparture.getText())));
+        stopPoint.setOdometer(Integer.parseInt(textFieldOdometer.getText()));
+        if(!textLabelDieselRefueled.getText().isEmpty()){
+            stopPoint.setVolumeOfDiesel(Double.parseDouble(textLabelDieselRefueled.getText()));
+        }
     }
 
     public void setTrip(Trip trip) {
@@ -98,6 +104,8 @@ public class StopPointWindowController implements Initializable {
             textFieldTimeOfArrival.setText(String.valueOf(LocalTime.from(stopPoint.getTimeOfArrival())));
             datePickerDeparture.setValue(LocalDate.from(stopPoint.getTimeOfDeparture()));
             textFieldTimeofDeparture.setText(String.valueOf(LocalTime.from(stopPoint.getTimeOfDeparture())));
+            textFieldOdometer.setText(String.valueOf(stopPoint.getOdometer()));
+            textLabelDieselRefueled.setText(String.valueOf(stopPoint.getVolumeOfDiesel()));
         }
     }
 }

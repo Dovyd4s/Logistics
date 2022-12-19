@@ -11,10 +11,9 @@ public class Forum {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String title;
-    @OneToMany
-    private List<Forum> subForums;
-    @OneToMany
-    private List<Comment> comments;
+    @ManyToOne
+    private Forum parentForum;
+
 
     @Override
     public String toString() {

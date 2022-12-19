@@ -2,6 +2,8 @@ package fxControllers;
 
 import entities.*;
 import hibernate.HibernateCRUD;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,7 +17,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-import javax.swing.event.ListDataListener;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -43,6 +44,20 @@ public class MainWindowController implements Initializable {
     public TextField textFieldNewForumName;
     public TextField textFieldCommentTitle;
     public TextArea textAreaComment;
+    public Button buttonCreateNewForum;
+    public Button buttonCreateNewComment;
+    public Label labelReplyAddNewThread;
+    public Label labelAddNewSubForum;
+    public RadioButton radioButtonStatusComplete;
+    public ToggleGroup StatusRadioGroup;
+    public RadioButton radioButtonStatusInProgress;
+    public RadioButton radioButtonStatusNotStarted;
+    public RadioButton radioButtonStatusShowAll;
+    public ChoiceBox filterChoiceBoxDriver;
+    public DatePicker pickupDateFilter;
+    public DatePicker deliveryDateFilter;
+    public Button buttonEditSelectedTrip;
+    public Button buttonShowStatistics;
     private TreeItem root;
     private User user;
     public Tab usersTab;
@@ -60,23 +75,67 @@ public class MainWindowController implements Initializable {
         roleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
         idColumn.setCellValueFactory(new PropertyValueFactory<>("idColumn"));
 
-        Forum root = new Forum();
-        root.setTitle("root cat.");
-        TreeItem rootTreeItem = new TreeItem(root);
+        fillDriversBox ();
 
-        List<Forum> forums = HibernateCRUD.getAllEntity(root);
+        Forum rootForum = new Forum();
+        rootForum.setTitle("root cat.");
+        root = new TreeItem(rootForum);
+
+        List<Forum> forums = HibernateCRUD.getAllEntity(rootForum);
+        List<Comment> comments = HibernateCRUD.getAllEntity(new Comment());
         for(Forum forum : forums){
-            rootTreeItem.getChildren().add(new TreeItem(forum));
+            if(forum.getParentForum()==null) {
+                TreeItem<Forum> treeItem = new TreeItem<>(forum);
+
+                treeGenerator(treeItem,forums,comments);
+
+                root.getChildren().add(treeItem);
+            }
         }
 
-        forumTreeView.setRoot(rootTreeItem);
-        rootTreeItem.setExpanded(true);
+        forumTreeView.setRoot(root);
+        root.setExpanded(true);
     }
-    private <T>TreeItem treeGenerator (TreeItem t){
-        if(t.getValue().getClass().equals(Forum.class)){
+    private void refreshForum(){
+        root.getChildren().clear();
+        List<Forum> forums = HibernateCRUD.getAllEntity(new Forum());
+        List<Comment> comments = HibernateCRUD.getAllEntity(new Comment());
+        for(Forum forum : forums){
+            if(forum.getParentForum()==null) {
+                TreeItem<Forum> treeItem = new TreeItem<>(forum);
+                treeGenerator(treeItem,forums,comments);
 
+                root.getChildren().add(treeItem);
+            }
         }
-
+    }
+    private void treeGenerator (TreeItem t, List<Forum> forums, List<Comment> comments){
+        if(t.getValue().getClass().equals(Forum.class)){
+            Forum forum = (Forum) t.getValue();
+            for(Forum f : forums){
+                if(f.getParentForum()!= null && f.getParentForum().equals(forum)){
+                    TreeItem treeItem = new TreeItem(f);
+                    t.getChildren().add(treeItem);
+                    treeGenerator(treeItem, forums, comments);
+                }
+            }
+            for(Comment c : comments){
+                if(c.getParentForum() != null && c.getParentForum().equals(forum)){
+                    TreeItem<Comment> treeItem = new TreeItem<>(c);
+                    t.getChildren().add(treeItem);
+                    treeGenerator(treeItem,forums,comments);
+                }
+            }
+        } else if (t.getValue().getClass().equals(Comment.class)) {
+            Comment selectedComment = (Comment) t.getValue();
+            for(Comment c : comments){
+                if(c.getParentComment()!= null && c.getParentComment().equals(selectedComment)){
+                    TreeItem<Comment> treeItem = new TreeItem<>(c);
+                    t.getChildren().add(treeItem);
+                    treeGenerator(treeItem,forums,comments);
+                }
+            }
+        }
     }
     public void setUser(User user) {
         this.user = user;
@@ -99,8 +158,7 @@ public class MainWindowController implements Initializable {
     }
 
     private void fillTripsList() {
-        Trip trip = new Trip();
-        List<Trip> trips = HibernateCRUD.getAllEntity(trip);
+        List<Trip> trips = HibernateCRUD.getAllEntity(new Trip());
         if(user.getClass().equals(Manager.class)){
             trips.forEach(c->listViewTrips.getItems().add(c));
         }else{
@@ -208,6 +266,10 @@ public class MainWindowController implements Initializable {
         listViewTrips.getItems().clear();
         fillTripsList();
     }
+    public void refreshTrips() {
+        listViewTrips.getItems().clear();
+        fillTripsList();
+    }
     public void editSelectedUser(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmls/signup-window.fxml"));
         Parent root = loader.load();
@@ -264,41 +326,158 @@ public class MainWindowController implements Initializable {
     }
 
     public void mouseClickedOnForum(MouseEvent mouseEvent) {
+        TreeItem<?> selection = (TreeItem<?>) forumTreeView.getSelectionModel().getSelectedItem();
+        if(selection != null && selection.getValue().getClass().equals(Forum.class)){
+            buttonCreateNewComment.setDisable(false);
+            buttonCreateNewForum.setDisable(false);
+            labelAddNewSubForum.setText("Create new SubForum:");
+            labelReplyAddNewThread.setText("Create new Thread:");
+            textFieldCommentTitle.setDisable(false);
+            textAreaComment.setDisable(false);
+            textFieldNewForumName.setDisable(false);
+        } else if (selection != null && selection.getValue().getClass().equals(Comment.class)) {
+            buttonCreateNewForum.setDisable(true);
+            buttonCreateNewComment.setDisable(false);
+            textFieldCommentTitle.setDisable(true);
+            textAreaComment.setDisable(false);
+            textFieldNewForumName.setDisable(true);
+            labelReplyAddNewThread.setText("Reply to selected comment:");
+        }
+        if(selection != null && selection.equals(root)){
+            buttonCreateNewComment.setDisable(true);
+            buttonCreateNewForum.setDisable(false);
+            labelAddNewSubForum.setText("Add New Forum:");
+            textFieldCommentTitle.setDisable(true);
+            textAreaComment.setDisable(true);
+            textFieldNewForumName.setDisable(false);
+        }
     }
-
+    private void fillDriversBox (){
+        Driver driver = new Driver();
+        List<Driver> drivers = new ArrayList<>();
+        drivers = HibernateCRUD.getAllEntity(driver);
+        drivers.forEach(c->filterChoiceBoxDriver.getItems().add(c));
+        filterChoiceBoxDriver.getItems().add("Show All");
+        filterChoiceBoxDriver.getItems().add("W/O assigned driver");
+        filterChoiceBoxDriver.setValue("Show All");
+        filterChoiceBoxDriver.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                filterSelection();
+            }
+        });
+    }
     public void addNewSubForum(ActionEvent actionEvent) {
+        TreeItem selected = (TreeItem) forumTreeView.getSelectionModel().getSelectedItem();
         Forum forum = new Forum();
         forum.setTitle(textFieldNewForumName.getText());
+        if(selected.equals(root)){
+            forum.setParentForum(null);
+        }else{
+            forum.setParentForum((Forum) selected.getValue());
+        }
         HibernateCRUD.createObject(forum);
-        Forum selected = ((TreeItem<Forum>) forumTreeView.getSelectionModel().getSelectedItem()).getValue();
-        selected.getSubForums().add(forum);
-        HibernateCRUD.updateObject(selected);
+        refreshForum();
     }
 
     public void buttonAddNewComment(ActionEvent actionEvent) {
-        TreeItem<?> treeItem = (TreeItem<?>) forumTreeView.getSelectionModel().getSelectedItem();
+        TreeItem<?> selectedItem = (TreeItem<?>) forumTreeView.getSelectionModel().getSelectedItem();
 
         Comment comment = new Comment();
         comment.setTitle(textFieldCommentTitle.getText());
         comment.setCommentText(textAreaComment.getText());
         comment.setAuthor(user);
         comment.setCreatedDateTime(LocalDateTime.now());
-        HibernateCRUD.createObject(comment);
 
-        if(treeItem.getValue().getClass().equals(Forum.class)){
-            Forum forum = (Forum) treeItem.getValue();
-            forum.getComments().add(comment);
-            HibernateCRUD.updateObject(forum);
-        } else if (treeItem.getValue().getClass().equals(Comment.class)) {
-            Comment selected = (Comment) treeItem.getValue();
-            if(selected.getReplies()!=null){
-                selected.getReplies().add(comment);
-            }else{
-                selected.setReplies(new ArrayList<>());
-                HibernateCRUD.updateObject(selected);
-                selected.getReplies().add(comment);
-            }
-            HibernateCRUD.updateObject(selected);
+        if(selectedItem.getValue().getClass().equals(Forum.class)){
+            comment.setParentForum((Forum) selectedItem.getValue());
+        } else if (selectedItem.getValue().getClass().equals(Comment.class)) {
+            comment.setParentComment((Comment) selectedItem.getValue());
         }
+        HibernateCRUD.createObject(comment);
+        refreshForum();
+    }
+
+    public void filterSelection() {
+        refreshTrips();
+        List<Trip>filterOutList = new ArrayList<>();
+
+        if(!radioButtonStatusShowAll.isSelected()){
+            for(Trip trip : listViewTrips.getItems()){
+                if(radioButtonStatusComplete.isSelected()){
+                    if(!trip.isComplete()){
+                        filterOutList.add(trip);
+                    }
+                } else if (radioButtonStatusInProgress.isSelected()) {
+                    if(!trip.isInProcess()){
+                        filterOutList.add(trip);
+                    }
+                }else if (radioButtonStatusNotStarted.isSelected()){
+                    if((trip.isComplete() || trip.isInProcess())){
+                        filterOutList.add(trip);
+                    }
+                }
+            }
+            listViewTrips.getItems().removeAll(filterOutList);
+            filterOutList.clear();
+        }
+
+        if(!filterChoiceBoxDriver.getValue().equals("Show All")){
+            for(Trip trip : listViewTrips.getItems()){
+                if(filterChoiceBoxDriver.getValue().equals("W/O assigned driver")){
+                    if(trip.getAssignedDriver() != null){
+                        filterOutList.add(trip);
+                    }
+                }else {
+                    if(trip.getAssignedDriver() == null || (!trip.getAssignedDriver().equals(filterChoiceBoxDriver.getValue()))){
+                        filterOutList.add(trip);
+                    }
+                }
+            }
+            listViewTrips.getItems().removeAll(filterOutList);
+            filterOutList.clear();
+        }
+
+        if(pickupDateFilter.getValue()!=null){
+            for(Trip trip : listViewTrips.getItems()){
+                if(trip.getCargo() == null || trip.getCargo().getReadyForPickUpDate()==null){
+                    filterOutList.add(trip);
+                } else if (!trip.getCargo().getReadyForPickUpDate().equals(pickupDateFilter.getValue())){
+                    filterOutList.add(trip);
+                }
+            }
+            listViewTrips.getItems().removeAll(filterOutList);
+            filterOutList.clear();
+        }
+        if(deliveryDateFilter.getValue()!=null){
+            for(Trip trip : listViewTrips.getItems()){
+                if(trip.getCargo() == null || trip.getCargo().getMustBeDeliveredUntilDate()==null){
+                    filterOutList.add(trip);
+                } else if(!trip.getCargo().getMustBeDeliveredUntilDate().equals(deliveryDateFilter.getValue())){
+                    filterOutList.add(trip);
+                }
+            }
+            listViewTrips.getItems().removeAll(filterOutList);
+            filterOutList.clear();
+        }
+    }
+
+    public void clickedOnTripsList(MouseEvent mouseEvent) {
+        if(listViewTrips.getSelectionModel().getSelectedItem()!=null){
+            buttonShowStatistics.setDisable(false);
+            buttonEditSelectedTrip.setDisable(false);
+            buttonDeleteSelectedTrip.setDisable(false);
+        }
+    }
+
+    public void showStatistics(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxmls/trip-statistics.fxml"));
+        Parent root = loader.load();
+        TripStatisticsController tripStatisticsController = loader.getController();
+        tripStatisticsController.setTrip(listViewTrips.getSelectionModel().getSelectedItem());
+        Stage stage = new Stage();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 }

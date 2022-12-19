@@ -17,7 +17,9 @@ public class Comment {
     private LocalDateTime createdDateTime;
     private String title;
     private String commentText;
-    @OneToMany (cascade = CascadeType.MERGE)
-    private List<Comment> replies;
+    @ManyToOne
+    private Comment parentComment;
+    @ManyToOne
+    private Forum parentForum;
 
 }
