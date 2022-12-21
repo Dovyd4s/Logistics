@@ -90,6 +90,8 @@ public class TripsWindowController implements Initializable {
         }else{
             radioButtonInProcessNo.setSelected(true);
         }
+        assignedTruck=trip.getAssignedTruck();
+        fillTruckTextArea();
     }
     public void updateTrip(ActionEvent actionEvent) {
         collectDataFromForms();
@@ -155,10 +157,16 @@ public class TripsWindowController implements Initializable {
 
     public void assignSelectedTruck(ActionEvent actionEvent) {
         assignedTruck = (Truck) trucksList.getSelectionModel().getSelectedItem();
-        textAreaSelectedTruck.setText("Make: " + assignedTruck.getMake() +
-            "\nModel: " + assignedTruck.getModel() +
-               "\nPlates: " + assignedTruck.getPlateNumber() +
-               "\nVIN: " + assignedTruck.getVIN());
+        fillTruckTextArea();
+    }
+    private void fillTruckTextArea (){
+        if (assignedTruck != null) {
+            textAreaSelectedTruck.setText("Make: " + assignedTruck.getMake() +
+                    "\nModel: " + assignedTruck.getModel() +
+                    "\nPlates: " + assignedTruck.getPlateNumber() +
+                    "\nVIN: " + assignedTruck.getVIN());
+        }
+
     }
 
     public void editSelectedStopPoint(ActionEvent actionEvent) throws IOException {

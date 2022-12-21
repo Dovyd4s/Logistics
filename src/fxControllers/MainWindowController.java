@@ -75,8 +75,6 @@ public class MainWindowController implements Initializable {
         roleColumn.setCellValueFactory(new PropertyValueFactory<>("role"));
         idColumn.setCellValueFactory(new PropertyValueFactory<>("idColumn"));
 
-        fillDriversBox ();
-
         Forum rootForum = new Forum();
         rootForum.setTitle("root cat.");
         root = new TreeItem(rootForum);
@@ -155,6 +153,7 @@ public class MainWindowController implements Initializable {
         fillTrucksList();
         fillTripsList();
         fillCargoList();
+        fillDriversBox();
     }
 
     private void fillTripsList() {
@@ -356,7 +355,11 @@ public class MainWindowController implements Initializable {
         Driver driver = new Driver();
         List<Driver> drivers = new ArrayList<>();
         drivers = HibernateCRUD.getAllEntity(driver);
-        drivers.forEach(c->filterChoiceBoxDriver.getItems().add(c));
+        if(user.getClass().equals(Manager.class)){
+            drivers.forEach(c->filterChoiceBoxDriver.getItems().add(c));
+        }else{
+            filterChoiceBoxDriver.getItems().add(user);
+        }
         filterChoiceBoxDriver.getItems().add("Show All");
         filterChoiceBoxDriver.getItems().add("W/O assigned driver");
         filterChoiceBoxDriver.setValue("Show All");

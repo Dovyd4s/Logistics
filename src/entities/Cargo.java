@@ -3,9 +3,7 @@ package entities;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.List;
 @Data
 @Entity
 public class Cargo {
@@ -20,4 +18,9 @@ public class Cargo {
     private float totalCargoWeightTonnes;
     private String pickupAddress;
     private String deliveryAddress;
+
+    @Override
+    public String toString() {
+        return "Id: " + Id + ", " + pickupAddress + " - " + deliveryAddress + ", pickup: " + readyForPickUpDate + ", delivery: " + mustBeDeliveredUntilDate;
+    }
 }
