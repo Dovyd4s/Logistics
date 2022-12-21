@@ -11,7 +11,7 @@ public class Trip {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    @OneToMany
+    @OneToMany(orphanRemoval = true)
     private List<StopPoint> allRestPoints;
     @ManyToOne
     @Cascade(value = org.hibernate.annotations.CascadeType.MERGE)
