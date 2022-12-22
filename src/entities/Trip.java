@@ -31,4 +31,9 @@ public class Trip {
     private Truck assignedTruck;
     private boolean inProcess;
     private boolean complete;
+
+    @Override
+    public String toString() {
+        return "id: " + id + ", Driver=" + assignedDriver + ", Manager=" + assignedManager + ", Cargo=" + cargo;
+    }
 }

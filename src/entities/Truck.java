@@ -23,4 +23,8 @@ public class Truck {
     private LocalDate manufacturedDate;
     private LocalDate lastTechnicalStateCheckDate;
 
+    @Override
+    public String toString() {
+        return "VIN: " + VIN + " " + plateNumber + " " + Make + " " + Model;
+    }
 }

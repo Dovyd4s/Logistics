@@ -22,4 +22,9 @@ public class StopPoint implements Serializable {
     private LocalDateTime timeOfDeparture;
     private int odometer;
     private double volumeOfDiesel;
+
+    @Override
+    public String toString() {
+        return "ID: " + ID + ", " + stopName + ", address: " + address;
+    }
 }

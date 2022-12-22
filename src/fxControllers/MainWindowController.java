@@ -58,6 +58,12 @@ public class MainWindowController implements Initializable {
     public DatePicker deliveryDateFilter;
     public Button buttonEditSelectedTrip;
     public Button buttonShowStatistics;
+    public Button deleteForumButton;
+    public Button editforumButton;
+    public Button buttonUpdateComment;
+    public Button buttonCancelEditingComment;
+    public Button buttonUpdateForumTitle;
+    public Button buttonCancelEditingForumTitle;
     private TreeItem root;
     private User user;
     public Tab usersTab;
@@ -93,6 +99,7 @@ public class MainWindowController implements Initializable {
 
         forumTreeView.setRoot(root);
         root.setExpanded(true);
+        forumTreeView.setShowRoot(false);
     }
     private void refreshForum(){
         root.getChildren().clear();
@@ -275,6 +282,7 @@ public class MainWindowController implements Initializable {
         SignupWindowController signupWindowController = loader.getController();
         signupWindowController.setUser(HibernateCRUD.getUserById(
                 Integer.parseInt(usersTableView.getSelectionModel().getSelectedItem().getIdColumn())));
+        signupWindowController.setEditor(user);
         Stage stage = new Stage();
         Scene scene = new Scene(root);
         stage.setScene(scene);
@@ -325,6 +333,8 @@ public class MainWindowController implements Initializable {
     }
 
     public void mouseClickedOnForum(MouseEvent mouseEvent) {
+        editforumButton.setDisable(true);
+        deleteForumButton.setDisable(true);
         TreeItem<?> selection = (TreeItem<?>) forumTreeView.getSelectionModel().getSelectedItem();
         if(selection != null && selection.getValue().getClass().equals(Forum.class)){
             buttonCreateNewComment.setDisable(false);
@@ -341,6 +351,12 @@ public class MainWindowController implements Initializable {
             textAreaComment.setDisable(false);
             textFieldNewForumName.setDisable(true);
             labelReplyAddNewThread.setText("Reply to selected comment:");
+            if(((Comment)selection.getValue()).getAuthor().equals(user)){
+                editforumButton.setDisable(false);
+                if(selection.getChildren().isEmpty()){
+                    deleteForumButton.setDisable(false);
+                }
+            }
         }
         if(selection != null && selection.equals(root)){
             buttonCreateNewComment.setDisable(true);
@@ -349,6 +365,12 @@ public class MainWindowController implements Initializable {
             textFieldCommentTitle.setDisable(true);
             textAreaComment.setDisable(true);
             textFieldNewForumName.setDisable(false);
+        }
+        if(user.getClass().equals(Manager.class) && ((Manager)user).isAdmin()){
+            editforumButton.setDisable(false);
+            if(selection.getChildren().isEmpty()){
+                deleteForumButton.setDisable(false);
+            }
         }
     }
     private void fillDriversBox (){
@@ -482,5 +504,40 @@ public class MainWindowController implements Initializable {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void deleteForumThingie(ActionEvent actionEvent) {
+        HibernateCRUD.deleteObject(((TreeItem<?>) forumTreeView.getSelectionModel().getSelectedItem()).getValue());
+        refreshForum();
+    }
+
+    public void editForumThing(ActionEvent actionEvent) {
+        forumTreeView.setDisable(true);
+        TreeItem<?> selection = (TreeItem<?>) forumTreeView.getSelectionModel().getSelectedItem();
+        if(selection.getValue().getClass().equals(Comment.class)){
+            buttonUpdateComment.setVisible(true);
+            buttonCancelEditingComment.setVisible(true);
+            textAreaComment.setText(((Comment)selection.getValue()).getCommentText());
+            if(!((Comment) selection.getValue()).getTitle().isEmpty()){
+                textFieldCommentTitle.setDisable(false);
+                textFieldCommentTitle.setText(((Comment)selection.getValue()).getTitle());
+            }
+        } else if (selection.getValue().getClass().equals(Forum.class)) {
+            buttonUpdateForumTitle.setVisible(true);
+            buttonCancelEditingForumTitle.setVisible(true);
+            textFieldNewForumName.setText(((Forum)selection.getValue()).getTitle());
+        }
+    }
+
+    public void UpdateComment(ActionEvent actionEvent) {
+    }
+
+    public void cancelCommentEditing(ActionEvent actionEvent) {
+    }
+
+    public void updateForumTitle(ActionEvent actionEvent) {
+    }
+
+    public void cancelEditingForumTitle(ActionEvent actionEvent) {
     }
 }

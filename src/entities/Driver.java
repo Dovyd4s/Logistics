@@ -13,6 +13,6 @@ public class Driver extends User implements Serializable {
 
     @Override
     public String toString() {
-        return getName() + " " + getLastName() + " " + getClass().getSimpleName();
+        return "(ID: " + getId() + ") " + getName() + " " + getLastName();
     }
 }

@@ -22,4 +22,13 @@ public class Comment {
     @ManyToOne
     private Forum parentForum;
 
+    @Override
+    public String toString() {
+        if(title.isEmpty()){
+            return commentText;
+        }else{
+            return "\"" + title + "\": " + commentText;
+        }
+
+    }
 }

@@ -36,11 +36,31 @@ public class SignupWindowController {
     public Label labelLoginInUse;
     public Button buttonUpdate;
     public Button buttonGoToLogin;
+    public TextField textFieldBonusPerKm;
+    public TextField textFieldMinimumDistanceForBonus;
+    public RadioButton radioIsAdmin;
+    public ToggleGroup AdminOrNotGroup;
+    public RadioButton radioNotAdmin;
+    public Label labelBonusperKm;
+    public Label labelMinDistanceForBonus;
+    private User editor;
 
     public void setUser(User user) {
         this.user = user;
         fillData();
         buttonGoToLogin.setDisable(true);
+    }
+    public void setEditor (User editor){
+        this.editor = editor;
+        if(editor.getClass().equals(Manager.class)){
+            if(((Manager) editor).isAdmin()){
+                textFieldBonusPerKm.setDisable(false);
+                textFieldMinimumDistanceForBonus.setDisable(false);
+                radioIsAdmin.setDisable(false);
+                radioNotAdmin.setDisable(false);
+            }
+        }
+        createAccButton.setDisable(true);
     }
 
     private User user;
@@ -89,6 +109,12 @@ public class SignupWindowController {
         driversLicenceValidDateField.setVisible(true);
         driversLicenceValidDateLabel.setVisible(true);
         createAccButton.setDisable(false);
+        radioIsAdmin.setVisible(false);
+        radioNotAdmin.setVisible(false);
+        textFieldBonusPerKm.setVisible(false);
+        textFieldMinimumDistanceForBonus.setVisible(false);
+        labelBonusperKm.setVisible(false);
+        labelMinDistanceForBonus.setVisible(false);
     }
 
     public void managerSelected(ActionEvent actionEvent) {
@@ -97,6 +123,12 @@ public class SignupWindowController {
         driversLicenceValidDateField.setVisible(false);
         driversLicenceValidDateLabel.setVisible(false);
         createAccButton.setDisable(false);
+        radioIsAdmin.setVisible(true);
+        radioNotAdmin.setVisible(true);
+        textFieldBonusPerKm.setVisible(true);
+        textFieldMinimumDistanceForBonus.setVisible(true);
+        labelBonusperKm.setVisible(true);
+        labelMinDistanceForBonus.setVisible(true);
     }
 
     public void goToLoginWindow(ActionEvent actionEvent) {
@@ -139,9 +171,22 @@ public class SignupWindowController {
             driversLicenceValidDateField.setValue(((Driver) user).getDriverLicenseValidUntilDate());
             healthCheckDateField.setValue(((Driver) user).getHealthCheckValidUntilDate());
             driverRadioButton.setSelected(true);
+            labelMinDistanceForBonus.setVisible(false);
+            labelBonusperKm.setVisible(false);
+            textFieldMinimumDistanceForBonus.setVisible(false);
+            textFieldBonusPerKm.setVisible(false);
+            radioIsAdmin.setVisible(false);
+            radioNotAdmin.setVisible(false);
         }else{
             driverRadioButton.setDisable(true);
             managetRadioButton.setSelected(true);
+            textFieldBonusPerKm.setText(String.valueOf(((Manager)user).getBonusAmountPerKmEUR()));
+            textFieldMinimumDistanceForBonus.setText(String.valueOf(((Manager)user).getMinDistanceToGetBonus()));
+            if(((Manager)user).isAdmin()){
+                radioIsAdmin.setSelected(true);
+            }else{
+                radioNotAdmin.setSelected(true);
+            }
         }
 
     }
@@ -149,6 +194,10 @@ public class SignupWindowController {
         if(driverRadioButton.isSelected()){
             ((Driver)user).setHealthCheckValidUntilDate(healthCheckDateField.getValue());
             ((Driver)user).setDriverLicenseValidUntilDate(driversLicenceValidDateField.getValue());
+        }else{
+            ((Manager)user).setAdmin(radioIsAdmin.isSelected());
+            ((Manager)user).setBonusAmountPerKmEUR(Float.parseFloat(textFieldBonusPerKm.getText()));
+            ((Manager)user).setMinDistanceToGetBonus(Integer.parseInt(textFieldMinimumDistanceForBonus.getText()));
         }
         user.setLogin(loginField.getText());
         user.setPassword(passwordField.getText());

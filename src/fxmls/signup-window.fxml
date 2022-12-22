@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="625.0" prefWidth="298.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxControllers.SignupWindowController">
+<AnchorPane prefHeight="665.0" prefWidth="298.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxControllers.SignupWindowController">
    <children>
       <RadioButton fx:id="driverRadioButton" layoutX="81.0" layoutY="36.0" mnemonicParsing="false" onAction="#driverSelected" text="Driver" AnchorPane.leftAnchor="81.0">
          <toggleGroup>
@@ -22,9 +16,9 @@
       <Label layoutX="136.0" layoutY="53.0" text="Login" />
       <Label layoutX="101.0" layoutY="95.0" text="Enter your password" />
       <Label layoutX="96.0" layoutY="137.0" text="Repeat your password" />
-      <TextField fx:id="loginField" layoutX="81.0" layoutY="70.0" onKeyTyped="#loginKeyPressed" promptText="Login" />
-      <PasswordField fx:id="passwordField" layoutX="81.0" layoutY="112.0" onKeyTyped="#keyPressedPasswordField" promptText="Password" />
-      <PasswordField fx:id="repeatPasswordField" layoutX="81.0" layoutY="154.0" onKeyTyped="#keyPressedPasswordField" promptText="Password" />
+      <TextField fx:id="loginField" layoutX="81.0" layoutY="70.0" onKeyTyped="#loginKeyPressed" promptText="Login" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0" />
+      <PasswordField fx:id="passwordField" layoutX="81.0" layoutY="112.0" onKeyTyped="#keyPressedPasswordField" promptText="Password" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0" />
+      <PasswordField fx:id="repeatPasswordField" layoutX="81.0" layoutY="154.0" onKeyTyped="#keyPressedPasswordField" promptText="Password" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0" />
       <Label layoutX="141.0" layoutY="179.0" text="Name" />
       <Label layoutX="128.0" layoutY="221.0" text="Last Name" />
       <Label layoutX="141.0" layoutY="263.0" text="E-mail" />
@@ -32,19 +26,19 @@
       <Label layoutX="136.0" layoutY="347.0" text="Address" />
       <Label layoutX="131.0" layoutY="389.0" text="Birth Date" />
       <Label layoutX="101.0" layoutY="448.0" text="Date of employment" />
-      <TextField fx:id="nameField" layoutX="83.0" layoutY="196.0" promptText="Name" />
-      <TextField fx:id="lastNameField" layoutX="83.0" layoutY="238.0" promptText="Last Name" />
-      <TextField fx:id="emailField" layoutX="81.0" layoutY="280.0" promptText="Email" />
-      <TextField fx:id="phoneNrField" layoutX="83.0" layoutY="322.0" promptText="Phone number" />
-      <TextField fx:id="addressField" layoutX="83.0" layoutY="364.0" promptText="Address" />
-      <DatePicker fx:id="birthDateField" layoutX="70.0" layoutY="413.0" promptText="Birth Date" />
-      <DatePicker fx:id="dateOfEmploymentField" layoutX="68.0" layoutY="465.0" promptText="Date of Employment" />
-      <Button fx:id="createAccButton" disable="true" layoutX="124.0" layoutY="592.0" mnemonicParsing="false" onAction="#createButtonClicked" text="Create" />
+      <TextField fx:id="nameField" layoutX="83.0" layoutY="196.0" promptText="Name" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0" />
+      <TextField fx:id="lastNameField" layoutX="83.0" layoutY="238.0" promptText="Last Name" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0" />
+      <TextField fx:id="emailField" layoutX="81.0" layoutY="280.0" promptText="Email" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0" />
+      <TextField fx:id="phoneNrField" layoutX="83.0" layoutY="322.0" promptText="Phone number" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0" />
+      <TextField fx:id="addressField" layoutX="83.0" layoutY="364.0" promptText="Address" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0" />
+      <DatePicker fx:id="birthDateField" layoutX="70.0" layoutY="413.0" promptText="Birth Date" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0" />
+      <DatePicker fx:id="dateOfEmploymentField" layoutX="68.0" layoutY="465.0" promptText="Date of Employment" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0" />
+      <Button fx:id="createAccButton" disable="true" layoutX="139.0" layoutY="626.0" mnemonicParsing="false" onAction="#createButtonClicked" text="Create" />
       <Label fx:id="healthCheckDateLabel" layoutX="73.0" layoutY="495.0" text="Health-Check valid until date:" visible="false" />
       <Label fx:id="driversLicenceValidDateLabel" layoutX="83.0" layoutY="542.0" text="Driver's licence valid until:" visible="false" />
       <DatePicker fx:id="healthCheckDateField" layoutX="68.0" layoutY="512.0" visible="false" />
       <DatePicker fx:id="driversLicenceValidDateField" layoutX="68.0" layoutY="559.0" visible="false" />
-      <Button fx:id="buttonGoToLogin" layoutX="4.0" layoutY="592.0" mnemonicParsing="false" onAction="#goToLoginWindow" text="Go Login Window" />
+      <Button fx:id="buttonGoToLogin" layoutX="19.0" layoutY="626.0" mnemonicParsing="false" onAction="#goToLoginWindow" text="Go Login Window" />
       <Label fx:id="labelPasswordDontMach" layoutX="4.0" layoutY="124.0" prefHeight="44.0" prefWidth="69.0" text="Passwords don't mach!" textFill="RED" visible="false" wrapText="true" />
       <Label fx:id="labelLoginInUse" layoutX="4.0" layoutY="44.0" prefHeight="86.0" prefWidth="79.0" text="This Username is already in use!" textFill="RED" visible="false" wrapText="true">
 
@@ -52,6 +46,16 @@
             <Font name="System Bold" size="12.0" />
          </font>
       </Label>
-      <Button fx:id="buttonUpdate" layoutX="193.0" layoutY="592.0" mnemonicParsing="false" onAction="#updateUser" text="Update" />
+      <Button fx:id="buttonUpdate" layoutX="208.0" layoutY="626.0" mnemonicParsing="false" onAction="#updateUser" text="Update" />
+      <Label fx:id="labelBonusperKm" layoutX="116.0" layoutY="495.0" text="Bonus, €/km" />
+      <Label fx:id="labelMinDistanceForBonus" layoutX="22.0" layoutY="534.0" text="Minimum managed distance to receive a bonus:" />
+      <TextField fx:id="textFieldBonusPerKm" disable="true" layoutX="67.0" layoutY="512.0" text="0" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0" />
+      <TextField fx:id="textFieldMinimumDistanceForBonus" disable="true" layoutX="67.0" layoutY="551.0" text="0" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0" />
+      <RadioButton fx:id="radioIsAdmin" disable="true" layoutX="62.0" layoutY="594.0" mnemonicParsing="false" text="Is Admin">
+         <toggleGroup>
+            <ToggleGroup fx:id="AdminOrNotGroup" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton fx:id="radioNotAdmin" disable="true" layoutX="141.0" layoutY="594.0" mnemonicParsing="false" selected="true" text="Not Admin" toggleGroup="$AdminOrNotGroup" />
    </children>
 </AnchorPane>
