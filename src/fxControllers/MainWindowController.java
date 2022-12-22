@@ -82,7 +82,7 @@ public class MainWindowController implements Initializable {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("idColumn"));
 
         Forum rootForum = new Forum();
-        rootForum.setTitle("root cat.");
+        rootForum.setTitle("ROOT");
         root = new TreeItem(rootForum);
 
         List<Forum> forums = HibernateCRUD.getAllEntity(rootForum);
@@ -99,7 +99,7 @@ public class MainWindowController implements Initializable {
 
         forumTreeView.setRoot(root);
         root.setExpanded(true);
-        forumTreeView.setShowRoot(false);
+        forumTreeView.setShowRoot(true);
     }
     private void refreshForum(){
         root.getChildren().clear();
@@ -512,6 +512,9 @@ public class MainWindowController implements Initializable {
     }
 
     public void editForumThing(ActionEvent actionEvent) {
+        buttonCreateNewComment.setVisible(false);
+        editforumButton.setVisible(false);
+        deleteForumButton.setVisible(false);
         forumTreeView.setDisable(true);
         TreeItem<?> selection = (TreeItem<?>) forumTreeView.getSelectionModel().getSelectedItem();
         if(selection.getValue().getClass().equals(Comment.class)){
@@ -530,14 +533,45 @@ public class MainWindowController implements Initializable {
     }
 
     public void UpdateComment(ActionEvent actionEvent) {
-    }
-
-    public void cancelCommentEditing(ActionEvent actionEvent) {
+        TreeItem<?> selection = (TreeItem<?>) forumTreeView.getSelectionModel().getSelectedItem();
+        ((Comment)selection.getValue()).setTitle(textFieldCommentTitle.getText());
+        ((Comment) selection.getValue()).setCommentText(textAreaComment.getText());
+        HibernateCRUD.updateObject(selection.getValue());
+        forumTreeView.setDisable(false);
+        refreshForum();
+        buttonUpdateComment.setVisible(false);
+        buttonCancelEditingComment.setVisible(false);
+        textFieldCommentTitle.clear();
+        textAreaComment.clear();
     }
 
     public void updateForumTitle(ActionEvent actionEvent) {
+        TreeItem<?> selection = (TreeItem<?>) forumTreeView.getSelectionModel().getSelectedItem();
+        ((Forum)selection.getValue()).setTitle(textFieldNewForumName.getText());
+        HibernateCRUD.updateObject(selection.getValue());
+        forumTreeView.setDisable(false);
+        refreshForum();
+        buttonUpdateForumTitle.setVisible(false);
+        buttonCancelEditingForumTitle.setVisible(false);
+        textFieldNewForumName.clear();
+    }
+    public void cancelCommentEditing(ActionEvent actionEvent) {
+        buttonCreateNewComment.setVisible(true);
+        editforumButton.setVisible(true);
+        deleteForumButton.setVisible(true);
+        forumTreeView.setDisable(false);
+        refreshForum();
+        buttonUpdateComment.setVisible(false);
+        buttonCancelEditingComment.setVisible(false);
+        textFieldCommentTitle.clear();
+        textAreaComment.clear();
     }
 
     public void cancelEditingForumTitle(ActionEvent actionEvent) {
+        forumTreeView.setDisable(false);
+        refreshForum();
+        buttonUpdateForumTitle.setVisible(false);
+        buttonCancelEditingForumTitle.setVisible(false);
+        textFieldNewForumName.clear();
     }
 }
