@@ -49,6 +49,7 @@ public class SignupWindowController {
         this.user = user;
         fillData();
         buttonGoToLogin.setDisable(true);
+        buttonUpdate.setDisable(false);
     }
     public void setEditor (User editor){
         this.editor = editor;

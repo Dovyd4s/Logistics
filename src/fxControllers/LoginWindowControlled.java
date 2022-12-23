@@ -30,6 +30,7 @@ public class LoginWindowControlled {
             mainWindowController.setUser(user);
 
             Stage stage = (Stage)signupButton.getScene().getWindow();
+            stage.setTitle("This is not default title.");
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();

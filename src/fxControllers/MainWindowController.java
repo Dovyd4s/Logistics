@@ -529,6 +529,9 @@ public class MainWindowController implements Initializable {
             buttonUpdateForumTitle.setVisible(true);
             buttonCancelEditingForumTitle.setVisible(true);
             textFieldNewForumName.setText(((Forum)selection.getValue()).getTitle());
+            textFieldCommentTitle.setDisable(true);
+            textAreaComment.setDisable(true);
+            buttonCreateNewForum.setVisible(false);
         }
     }
 
@@ -543,6 +546,9 @@ public class MainWindowController implements Initializable {
         buttonCancelEditingComment.setVisible(false);
         textFieldCommentTitle.clear();
         textAreaComment.clear();
+        buttonCreateNewComment.setVisible(true);
+        editforumButton.setVisible(true);
+        deleteForumButton.setVisible(true);
     }
 
     public void updateForumTitle(ActionEvent actionEvent) {
@@ -550,10 +556,16 @@ public class MainWindowController implements Initializable {
         ((Forum)selection.getValue()).setTitle(textFieldNewForumName.getText());
         HibernateCRUD.updateObject(selection.getValue());
         forumTreeView.setDisable(false);
-        refreshForum();
         buttonUpdateForumTitle.setVisible(false);
         buttonCancelEditingForumTitle.setVisible(false);
         textFieldNewForumName.clear();
+        textFieldCommentTitle.setDisable(false);
+        textAreaComment.setDisable(false);
+        buttonCreateNewComment.setVisible(true);
+        editforumButton.setVisible(true);
+        deleteForumButton.setVisible(true);
+        buttonCreateNewForum.setVisible(true);
+        refreshForum();
     }
     public void cancelCommentEditing(ActionEvent actionEvent) {
         buttonCreateNewComment.setVisible(true);
@@ -573,5 +585,11 @@ public class MainWindowController implements Initializable {
         buttonUpdateForumTitle.setVisible(false);
         buttonCancelEditingForumTitle.setVisible(false);
         textFieldNewForumName.clear();
+        textFieldCommentTitle.setDisable(false);
+        textAreaComment.setDisable(false);
+        buttonCreateNewComment.setVisible(true);
+        editforumButton.setVisible(true);
+        deleteForumButton.setVisible(true);
+        buttonCreateNewForum.setVisible(true);
     }
 }
